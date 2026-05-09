@@ -2,7 +2,42 @@
 
 Natural-language music search across **Spotify, Deezer, iTunes, MusicBrainz** (plus a **Bandcamp** fallback for indie/underground tracks). Every result is resolved to a **YouTube** link so you can play it instantly.
 
-> _Live URLs will be added at the top of this file once Phase 5 deployment completes._
+## Live
+
+- **Frontend:** https://music-finder-eight.vercel.app/ (Vercel)
+- **Backend:** runs on the developer's machine, exposed publicly over HTTPS by [Cloudflare's free quick tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/do-more-with-tunnels/trycloudflare/) — no credit card, no account.
+
+### Why this hybrid setup?
+
+The original spec targeted Render for the API. In 2024 Render, Fly, Koyeb, and the similar Docker-friendly hosts all started requiring a credit card on file (even for free tiers). To keep this fully card-free without sacrificing a working public demo, the backend stays on the developer's machine and is fronted by a Cloudflare quick tunnel for the public Vercel page to reach.
+
+Trade-offs:
+
+- ✅ Fully open source, no card.
+- ✅ Frontend is permanently hosted on Vercel.
+- ✅ Backend runs the full Express + SQLite + Playwright stack with no compromises.
+- ⚠️ The tunnel URL changes every time `cloudflared tunnel --url ...` is restarted. To rotate it, run the helper script and redeploy the frontend (one command, ~30s).
+- ⚠️ When the developer machine is offline, the demo returns a network error. The frontend handles this gracefully (toasts).
+
+### Running it yourself
+
+```bash
+git clone https://github.com/harshmeet-100x/musicfinder.git
+cd musicfinder
+pnpm install
+cp .env.example backend/.env
+# (optional) add SPOTIFY_CLIENT_ID/SECRET, YOUTUBE_API_KEY in backend/.env
+
+# Terminal 1 — backend
+pnpm --filter backend dev      # http://localhost:3001
+
+# Terminal 2 — local frontend (alternative to the live Vercel URL)
+pnpm --filter frontend dev     # http://localhost:5173
+
+# Optional Terminal 3 — public tunnel for the live Vercel page
+cloudflared tunnel --url http://localhost:3001
+# Then update vercel.json's VITE_API_BASE_URL to the trycloudflare URL and `vercel --prod` to redeploy.
+```
 
 ## Why
 

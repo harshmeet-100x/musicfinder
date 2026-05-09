@@ -1,0 +1,35 @@
+{
+  "name": "music-finder",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Natural-language music search aggregator that resolves every result to a YouTube link.",
+  "scripts": {
+    "dev": "concurrently -n backend,frontend -c blue,magenta \"pnpm --filter backend dev\" \"pnpm --filter frontend dev\"",
+    "build": "pnpm --filter shared build && pnpm --filter backend build && pnpm --filter frontend build",
+    "lint": "pnpm -r --parallel lint",
+    "typecheck": "pnpm -r --parallel typecheck",
+    "test": "pnpm -r --parallel test",
+    "format": "prettier --write \"**/*.{ts,tsx,js,json,md,yml,yaml}\"",
+    "prepare": "husky || true"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "concurrently": "^9.1.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.2.10",
+    "prettier": "^3.4.2",
+    "typescript": "^5.7.2"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "prettier --write"
+    ],
+    "*.{js,json,md,yml,yaml}": [
+      "prettier --write"
+    ]
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "packageManager": "pnpm@11.0.8"
+}

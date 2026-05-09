@@ -1,0 +1,44 @@
+# Render IaC blueprint for the backend.
+# Render docs: https://render.com/docs/yaml-spec
+services:
+  - type: web
+    name: music-finder-backend
+    env: docker
+    plan: free
+    region: singapore
+    rootDir: .
+    dockerfilePath: backend/Dockerfile
+    dockerContext: .
+    healthCheckPath: /api/health
+    autoDeploy: true
+    disk:
+      name: music-finder-data
+      mountPath: /opt/app/data
+      sizeGB: 1
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3001
+      - key: USER_AGENT
+        value: MusicSearchApp/1.0 (anonymous@example.com)
+      - key: CACHE_TTL_HOURS
+        value: 24
+      - key: YOUTUBE_DAILY_QUOTA
+        value: 10000
+      - key: YOUTUBE_QUOTA_SAFETY_MARGIN
+        value: 500
+      - key: RATE_LIMIT_WINDOW_MS
+        value: 60000
+      - key: RATE_LIMIT_MAX_REQUESTS
+        value: 30
+      - key: SPOTIFY_CLIENT_ID
+        sync: false
+      - key: SPOTIFY_CLIENT_SECRET
+        sync: false
+      - key: YOUTUBE_API_KEY
+        sync: false
+      - key: ALLOWED_ORIGINS
+        sync: false
+      - key: FRONTEND_URL
+        sync: false

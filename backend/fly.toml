@@ -1,0 +1,34 @@
+# Optional Fly.io deployment config (Render is primary; this is provided as an alternative).
+app = "music-finder-backend"
+primary_region = "sin"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  NODE_ENV = "production"
+  PORT = "3001"
+
+[[services]]
+  internal_port = 3001
+  protocol = "tcp"
+
+  [[services.ports]]
+    port = 80
+    handlers = ["http"]
+  [[services.ports]]
+    port = 443
+    handlers = ["tls", "http"]
+
+  [services.concurrency]
+    type = "connections"
+    soft_limit = 200
+    hard_limit = 250
+
+[[services.tcp_checks]]
+  interval = "15s"
+  timeout = "2s"
+
+[mounts]
+  source = "music_finder_data"
+  destination = "/opt/app/data"

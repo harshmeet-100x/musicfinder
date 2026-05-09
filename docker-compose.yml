@@ -1,0 +1,31 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    image: music-finder-backend:dev
+    ports:
+      - '3001:3001'
+    environment:
+      NODE_ENV: production
+      PORT: 3001
+      ALLOWED_ORIGINS: http://localhost:5173,http://localhost:8080
+      FRONTEND_URL: http://localhost:5173
+      USER_AGENT: 'MusicSearchApp/1.0 (anonymous@example.com)'
+      SPOTIFY_CLIENT_ID: ${SPOTIFY_CLIENT_ID:-}
+      SPOTIFY_CLIENT_SECRET: ${SPOTIFY_CLIENT_SECRET:-}
+      YOUTUBE_API_KEY: ${YOUTUBE_API_KEY:-}
+    volumes:
+      - mf-data:/opt/app/data
+
+  frontend:
+    image: nginx:alpine
+    ports:
+      - '8080:80'
+    volumes:
+      - ./frontend/dist:/usr/share/nginx/html:ro
+    depends_on:
+      - backend
+
+volumes:
+  mf-data:
